@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        serif: ['Lora', 'serif'],
+        sans: ['Inter', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -57,28 +61,45 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Braverman tokens
+        "brav-bg": "hsl(var(--brav-bg))",
+        "brav-warm": "hsl(var(--brav-warm))",
+        "brav-text": "hsl(var(--brav-text))",
+        "brav-mid": "hsl(var(--brav-mid))",
+        "brav-light": "hsl(var(--brav-light))",
+        "brav-accent": "hsl(var(--brav-accent))",
+        "brav-border": "hsl(var(--brav-border))",
+        "brav-border-light": "hsl(var(--brav-border-light))",
+        // Neurotransmitter colors
+        "neuro-dopa": "hsl(var(--neuro-dopa))",
+        "neuro-dopa-bg": "hsl(var(--neuro-dopa-bg))",
+        "neuro-dopa-border": "hsl(var(--neuro-dopa-border))",
+        "neuro-ach": "hsl(var(--neuro-ach))",
+        "neuro-ach-bg": "hsl(var(--neuro-ach-bg))",
+        "neuro-ach-border": "hsl(var(--neuro-ach-border))",
+        "neuro-gaba": "hsl(var(--neuro-gaba))",
+        "neuro-gaba-bg": "hsl(var(--neuro-gaba-bg))",
+        "neuro-gaba-border": "hsl(var(--neuro-gaba-border))",
+        "neuro-sero": "hsl(var(--neuro-sero))",
+        "neuro-sero-bg": "hsl(var(--neuro-sero-bg))",
+        "neuro-sero-border": "hsl(var(--neuro-sero-border))",
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      width: {
+        '13': '3.25rem',
+      },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
