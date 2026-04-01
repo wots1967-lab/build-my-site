@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useEffect, useState } from 'react';
+import { useCallback, useMemo, useEffect, useState, useRef } from 'react';
 import type { Section, NeuroKey } from '@/data/testData';
 import { neuroMeta } from '@/data/testData';
 
@@ -44,45 +44,93 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
 
   const isLast = currentIdx === total - 1;
   const [focusedQ, setFocusedQ] = useState(0);
+  const [showHints, setShowHints] = useState(true);
+  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Reset focused question when section changes
   useEffect(() => {
     setFocusedQ(0);
   }, [currentIdx]);
 
+  // Scroll focused question into view
+  useEffect(() => {
+    const el = rowRefs.current[focusedQ];
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [focusedQ]);
+
+  // Auto-advance to next section when all questions answered
+  const allAnswered = answeredInSection === sec.questions.length;
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight' || e.key === 'Enter') {
-        e.preventDefault();
-        onNext();
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        onPrev();
-      } else if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        setFocusedQ(prev => Math.min(prev + 1, sec.questions.length - 1));
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        setFocusedQ(prev => Math.max(prev - 1, 0));
-      } else if (e.key === '1' || e.key === 'y' || e.key === 'Y' || e.key === 'т' || e.key === 'Т') {
-        e.preventDefault();
-        handleAnswer(focusedQ, true);
-        setFocusedQ(prev => Math.min(prev + 1, sec.questions.length - 1));
-      } else if (e.key === '2' || e.key === 'n' || e.key === 'N' || e.key === 'н' || e.key === 'Н') {
-        e.preventDefault();
-        handleAnswer(focusedQ, false);
-        setFocusedQ(prev => Math.min(prev + 1, sec.questions.length - 1));
+      // Ignore if user is typing in an input
+      if ((e.target as HTMLElement)?.tagName === 'INPUT' || (e.target as HTMLElement)?.tagName === 'TEXTAREA') return;
+
+      switch (e.key) {
+        case 'j':
+        case 'J':
+        case 'ArrowDown':
+          e.preventDefault();
+          setFocusedQ(prev => Math.min(prev + 1, sec.questions.length - 1));
+          break;
+
+        case 'k':
+        case 'K':
+        case 'ArrowUp':
+          e.preventDefault();
+          setFocusedQ(prev => Math.max(prev - 1, 0));
+          break;
+
+        case '1':
+        case 'д':
+        case 'Д':
+          e.preventDefault();
+          handleAnswer(focusedQ, true);
+          if (focusedQ < sec.questions.length - 1) {
+            setFocusedQ(prev => prev + 1);
+          }
+          break;
+
+        case '2':
+        case 'н':
+        case 'Н':
+          e.preventDefault();
+          handleAnswer(focusedQ, false);
+          if (focusedQ < sec.questions.length - 1) {
+            setFocusedQ(prev => prev + 1);
+          }
+          break;
+
+        case 'Enter':
+        case 'ArrowRight':
+          e.preventDefault();
+          onNext();
+          break;
+
+        case 'ArrowLeft':
+        case 'Backspace':
+          e.preventDefault();
+          onPrev();
+          break;
+
+        case '?':
+          e.preventDefault();
+          setShowHints(prev => !prev);
+          break;
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [onNext, onPrev, sec.questions.length, focusedQ, handleAnswer]);
+
   return (
     <div className="min-h-screen">
       {/* Sticky Header */}
       <div className="sticky top-0 z-50 backdrop-blur-sm border-b border-brav-border px-4 md:px-8 py-3.5 flex items-center gap-3 md:gap-6" style={{ background: 'rgba(250,249,247,0.96)' }}>
         <div className="hidden md:block font-serif text-[15px] text-brav-text flex-1 whitespace-nowrap overflow-hidden text-ellipsis">
-          {sec.part === 1 ? 'Частина 1 — Природа' : 'Частина 2 — Дефіцити'}
+          {sec.part === 1 ? 'Частина 1 — Домінування' : 'Частина 2 — Дефіцити'}
         </div>
 
         <div className="flex-[2] md:max-w-[320px]">
@@ -125,17 +173,22 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
             const key = `${sec.id}_${qi}`;
             const ans = answers[key];
             const isAnswered = ans !== undefined;
+            const isFocused = focusedQ === qi;
 
             return (
               <div
                 key={qi}
-                className={`flex items-stretch bg-white border rounded-lg overflow-hidden transition-colors ${
-                  focusedQ === qi
-                    ? 'border-brav-accent ring-1 ring-brav-accent/30'
+                ref={el => { rowRefs.current[qi] = el; }}
+                onClick={() => setFocusedQ(qi)}
+                className={`flex items-stretch bg-white border rounded-lg overflow-hidden transition-all cursor-pointer ${
+                  isFocused
+                    ? 'border-brav-accent ring-1 ring-brav-accent/30 shadow-sm'
                     : isAnswered ? 'border-brav-border' : 'border-brav-border-light hover:border-brav-border'
                 }`}
               >
-                <div className="w-9 flex items-center justify-center text-[11px] text-brav-light flex-shrink-0 border-r border-brav-border-light">
+                <div className={`w-9 flex items-center justify-center text-[11px] flex-shrink-0 border-r border-brav-border-light transition-colors ${
+                  isFocused ? 'text-brav-accent font-medium' : 'text-brav-light'
+                }`}>
                   {qi + 1}
                 </div>
                 <div className="flex-1 px-4 py-3 text-[14px] leading-[1.55] text-brav-text">
@@ -143,21 +196,25 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
                 </div>
                 <div className="flex flex-shrink-0 border-l border-brav-border-light">
                   <button
-                    onClick={() => handleAnswer(qi, true)}
+                    onClick={(e) => { e.stopPropagation(); handleAnswer(qi, true); }}
                     className={`w-13 md:w-16 border-none cursor-pointer text-[13px] font-sans flex items-center justify-center transition-all border-r border-brav-border-light ${
                       ans === true
                         ? 'bg-brav-warm text-brav-text font-medium'
-                        : 'bg-transparent text-brav-light hover:bg-brav-warm hover:text-brav-mid'
+                        : isFocused
+                          ? 'bg-transparent text-brav-mid hover:bg-brav-warm'
+                          : 'bg-transparent text-brav-light hover:bg-brav-warm hover:text-brav-mid'
                     }`}
                   >
                     Так
                   </button>
                   <button
-                    onClick={() => handleAnswer(qi, false)}
+                    onClick={(e) => { e.stopPropagation(); handleAnswer(qi, false); }}
                     className={`w-13 md:w-16 border-none cursor-pointer text-[13px] font-sans flex items-center justify-center transition-all ${
                       ans === false
                         ? 'bg-brav-warm text-brav-mid font-medium'
-                        : 'bg-transparent text-brav-light hover:bg-brav-warm hover:text-brav-mid'
+                        : isFocused
+                          ? 'bg-transparent text-brav-mid hover:bg-brav-warm'
+                          : 'bg-transparent text-brav-light hover:bg-brav-warm hover:text-brav-mid'
                     }`}
                   >
                     Ні
@@ -170,7 +227,7 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
       </div>
 
       {/* Bottom Nav */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-sm border-t border-brav-border px-4 md:px-8 py-4 flex items-center justify-between gap-4" style={{ background: 'rgba(250,249,247,0.97)' }}>
+      <div className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-sm border-t border-brav-border px-4 md:px-8 py-3 flex items-center justify-between gap-4" style={{ background: 'rgba(250,249,247,0.97)' }}>
         {currentIdx > 0 ? (
           <button
             onClick={onPrev}
@@ -180,15 +237,34 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
           </button>
         ) : <div />}
 
-        <div className="text-[13px] text-brav-light">
-          <span className="text-brav-mid font-medium">{answeredInSection}</span> з {sec.questions.length}
+        <div className="flex items-center gap-4">
+          <div className="text-[13px] text-brav-light">
+            <span className="text-brav-mid font-medium">{answeredInSection}</span> з {sec.questions.length}
+          </div>
+
+          {/* Keyboard hints */}
+          {showHints && (
+            <div className="hidden md:flex items-center gap-2 text-[11px] text-brav-light">
+              <span className="px-1.5 py-0.5 bg-brav-warm border border-brav-border rounded text-[10px] font-mono">1</span>
+              <span>Так</span>
+              <span className="px-1.5 py-0.5 bg-brav-warm border border-brav-border rounded text-[10px] font-mono">2</span>
+              <span>Ні</span>
+              <span className="mx-1 text-brav-border">|</span>
+              <span className="px-1.5 py-0.5 bg-brav-warm border border-brav-border rounded text-[10px] font-mono">↑↓</span>
+              <span>Рядок</span>
+              <span className="px-1.5 py-0.5 bg-brav-warm border border-brav-border rounded text-[10px] font-mono">Enter</span>
+              <span>Далі</span>
+            </div>
+          )}
         </div>
 
         <button
           onClick={onNext}
-          className="bg-brav-text text-brav-bg border-none px-8 py-2.5 rounded-full font-sans text-[14px] cursor-pointer transition-opacity hover:opacity-[0.78]"
+          className={`border-none px-8 py-2.5 rounded-full font-sans text-[14px] cursor-pointer transition-opacity hover:opacity-[0.78] ${
+            allAnswered ? 'bg-brav-text text-brav-bg' : 'bg-brav-text/70 text-brav-bg'
+          }`}
         >
-          {isLast ? 'Переглянути результати' : 'Далі'}
+          {isLast ? 'Результати' : 'Далі →'}
         </button>
       </div>
     </div>
