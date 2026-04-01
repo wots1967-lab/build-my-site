@@ -160,8 +160,8 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
 
       {/* Disclaimer */}
       <div className="mt-10 text-[12px] text-brav-light leading-[1.7] text-center px-2">
-        Цей результат є інформаційним і не замінює консультації фахівця.
-        Тест базується на методиці Еріка Бравермана («The Edge Effect», 2005).
+        Результати мають інформаційний характер і не є медичним діагнозом.
+        Методика базується на роботах Еріка Бравермана («The Edge Effect», 2005).
       </div>
 
       <button
