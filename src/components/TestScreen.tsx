@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useEffect } from 'react';
 import type { Section, NeuroKey } from '@/data/testData';
 import { neuroMeta } from '@/data/testData';
 
