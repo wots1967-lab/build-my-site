@@ -168,7 +168,7 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
         onClick={onRestart}
         className="block mx-auto mt-7 bg-transparent border border-brav-border text-brav-mid px-8 py-2.5 rounded-full font-sans text-[14px] cursor-pointer transition-all hover:border-brav-mid hover:text-brav-text"
       >
-        Пройти тест знову
+        Пройти оцінку повторно
       </button>
     </div>
   );
