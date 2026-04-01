@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useEffect } from 'react';
 import type { Section, NeuroKey } from '@/data/testData';
 import { neuroMeta } from '@/data/testData';
 
@@ -44,6 +44,19 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
 
   const isLast = currentIdx === total - 1;
 
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight' || e.key === 'Enter') {
+        e.preventDefault();
+        onNext();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        onPrev();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onNext, onPrev]);
   return (
     <div className="min-h-screen">
       {/* Sticky Header */}
