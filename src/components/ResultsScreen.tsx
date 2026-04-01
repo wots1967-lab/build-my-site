@@ -76,7 +76,7 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
 
       {/* Dominance Scores */}
       <div className="text-[11px] tracking-[0.15em] uppercase text-brav-light mb-4">
-        Бали домінування — Частина 1
+        Профіль домінування — Частина 1
       </div>
       <div className="flex flex-col gap-3 mb-8">
         {neuroOrder.map(k => {
