@@ -144,7 +144,7 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
       {/* Traits */}
       <div className="mt-8 p-6 bg-brav-warm rounded-xl border border-brav-border-light">
         <div className="font-serif text-[18px] font-normal mb-4 text-brav-text">
-          Ключові риси — {rd.name}
+          Характерні риси — {rd.name}
         </div>
         <div className="flex flex-wrap gap-2">
           {rd.traits.map((trait, i) => (
