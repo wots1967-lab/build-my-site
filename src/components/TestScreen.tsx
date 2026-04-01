@@ -130,7 +130,9 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
               <div
                 key={qi}
                 className={`flex items-stretch bg-white border rounded-lg overflow-hidden transition-colors ${
-                  isAnswered ? 'border-brav-border' : 'border-brav-border-light hover:border-brav-border'
+                  focusedQ === qi
+                    ? 'border-brav-accent ring-1 ring-brav-accent/30'
+                    : isAnswered ? 'border-brav-border' : 'border-brav-border-light hover:border-brav-border'
                 }`}
               >
                 <div className="w-9 flex items-center justify-center text-[11px] text-brav-light flex-shrink-0 border-r border-brav-border-light">
