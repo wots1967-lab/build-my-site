@@ -6,20 +6,20 @@ const IntroScreen = ({ onStart }: IntroScreenProps) => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16 text-center max-w-[560px] mx-auto">
       <p className="text-[11px] tracking-[0.18em] uppercase text-brav-light mb-7">
-        Оцінка Бравермана · BNA
+        Оцінка Бравермана · Нейрохімічний профіль
       </p>
 
       <h1 className="font-serif text-brav-text leading-[1.15] mb-2.5" style={{ fontSize: 'clamp(32px, 6vw, 48px)' }}>
-        Який нейромедіатор<br /><em className="italic text-brav-accent">формує тебе?</em>
+        Визначте домінантний<br /><em className="italic text-brav-accent">нейромедіатор</em>
       </h1>
 
       <p className="font-serif italic text-[17px] text-brav-mid mb-9">
-        Нейрохімічний профіль особистості
+        Комплексна оцінка нейрохімічного балансу
       </p>
 
       <p className="text-[15px] leading-[1.8] text-brav-mid mb-10">
-        Тест Бравермана визначає домінантний нейромедіатор, який керує твоїм темпераментом,
-        поведінкою та самопочуттям. Він також виявляє можливі дефіцити — там, де варто приділити увагу.
+        Методика Бравермана визначає домінантний нейромедіатор, що формує ваш когнітивний стиль,
+        темперамент та поведінкові патерни. Додатково оцінюються можливі дефіцити нейромедіаторних систем.
       </p>
 
       <div className="flex gap-2 flex-wrap justify-center mb-11">
@@ -33,18 +33,18 @@ const IntroScreen = ({ onStart }: IntroScreenProps) => {
         onClick={onStart}
         className="bg-brav-text text-brav-bg border-none px-11 py-4 rounded-full font-sans text-[15px] cursor-pointer transition-opacity hover:opacity-[0.78]"
       >
-        Почати
+        Розпочати оцінку
       </button>
 
       <p className="mt-5 text-[12px] text-brav-light">
-        315 тверджень · Так або Ні · ~25 хвилин
+        315 тверджень · Так / Ні · ~25 хвилин
       </p>
 
       <div className="w-10 h-px bg-brav-border my-8" />
 
       <p className="text-[12px] text-brav-light leading-[1.7] max-w-[400px]">
-        Тест розроблено д-ром Еріком Браверманом («The Edge Effect»).
-        Надається в інформаційних цілях і не є медичним висновком.
+        За методикою д-ра Еріка Бравермана («The Edge Effect», 2005).
+        Результати мають інформаційний характер і не є медичним діагнозом.
       </p>
     </div>
   );

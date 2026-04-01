@@ -44,7 +44,7 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
   return (
     <div className="max-w-[640px] mx-auto px-4 md:px-6 pt-16 pb-20">
       <p className="text-[11px] tracking-[0.18em] uppercase text-brav-light mb-3 text-center">
-        Твій нейрохімічний профіль
+        Результати нейрохімічної оцінки
       </p>
       <h2 className="font-serif font-normal text-center text-brav-text mb-2 leading-[1.2]" style={{ fontSize: 'clamp(28px, 5vw, 40px)' }}>
         {rd.name}
@@ -76,7 +76,7 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
 
       {/* Dominance Scores */}
       <div className="text-[11px] tracking-[0.15em] uppercase text-brav-light mb-4">
-        Бали домінування — Частина 1
+        Профіль домінування — Частина 1
       </div>
       <div className="flex flex-col gap-3 mb-8">
         {neuroOrder.map(k => {
@@ -104,7 +104,7 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
 
       {/* Deficiency Cards */}
       <div className="text-[11px] tracking-[0.15em] uppercase text-brav-light mb-4">
-        Дефіцити нейромедіаторів — Частина 2
+        Оцінка дефіцитів — Частина 2
       </div>
       <div className="flex flex-col gap-2.5">
         {neuroOrder.map(k => {
@@ -144,7 +144,7 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
       {/* Traits */}
       <div className="mt-8 p-6 bg-brav-warm rounded-xl border border-brav-border-light">
         <div className="font-serif text-[18px] font-normal mb-4 text-brav-text">
-          Ключові риси — {rd.name}
+          Характерні риси — {rd.name}
         </div>
         <div className="flex flex-wrap gap-2">
           {rd.traits.map((trait, i) => (
@@ -160,15 +160,15 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
 
       {/* Disclaimer */}
       <div className="mt-10 text-[12px] text-brav-light leading-[1.7] text-center px-2">
-        Цей результат є інформаційним і не замінює консультації фахівця.
-        Тест базується на методиці Еріка Бравермана («The Edge Effect», 2005).
+        Результати мають інформаційний характер і не є медичним діагнозом.
+        Методика базується на роботах Еріка Бравермана («The Edge Effect», 2005).
       </div>
 
       <button
         onClick={onRestart}
         className="block mx-auto mt-7 bg-transparent border border-brav-border text-brav-mid px-8 py-2.5 rounded-full font-sans text-[14px] cursor-pointer transition-all hover:border-brav-mid hover:text-brav-text"
       >
-        Пройти тест знову
+        Пройти оцінку повторно
       </button>
     </div>
   );
