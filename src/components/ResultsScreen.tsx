@@ -44,7 +44,7 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
   return (
     <div className="max-w-[640px] mx-auto px-4 md:px-6 pt-16 pb-20">
       <p className="text-[11px] tracking-[0.18em] uppercase text-brav-light mb-3 text-center">
-        Твій нейрохімічний профіль
+        Результати нейрохімічної оцінки
       </p>
       <h2 className="font-serif font-normal text-center text-brav-text mb-2 leading-[1.2]" style={{ fontSize: 'clamp(28px, 5vw, 40px)' }}>
         {rd.name}
