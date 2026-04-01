@@ -43,6 +43,12 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
   }, [sec.id, onAnswer]);
 
   const isLast = currentIdx === total - 1;
+  const [focusedQ, setFocusedQ] = useState(0);
+
+  // Reset focused question when section changes
+  useEffect(() => {
+    setFocusedQ(0);
+  }, [currentIdx]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -52,11 +58,25 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
         onPrev();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setFocusedQ(prev => Math.min(prev + 1, sec.questions.length - 1));
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setFocusedQ(prev => Math.max(prev - 1, 0));
+      } else if (e.key === '1' || e.key === 'y' || e.key === 'Y' || e.key === 'т' || e.key === 'Т') {
+        e.preventDefault();
+        handleAnswer(focusedQ, true);
+        setFocusedQ(prev => Math.min(prev + 1, sec.questions.length - 1));
+      } else if (e.key === '2' || e.key === 'n' || e.key === 'N' || e.key === 'н' || e.key === 'Н') {
+        e.preventDefault();
+        handleAnswer(focusedQ, false);
+        setFocusedQ(prev => Math.min(prev + 1, sec.questions.length - 1));
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [onNext, onPrev]);
+  }, [onNext, onPrev, sec.questions.length, focusedQ, handleAnswer]);
   return (
     <div className="min-h-screen">
       {/* Sticky Header */}
