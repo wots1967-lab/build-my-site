@@ -104,7 +104,7 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
 
       {/* Deficiency Cards */}
       <div className="text-[11px] tracking-[0.15em] uppercase text-brav-light mb-4">
-        Дефіцити нейромедіаторів — Частина 2
+        Оцінка дефіцитів — Частина 2
       </div>
       <div className="flex flex-col gap-2.5">
         {neuroOrder.map(k => {
