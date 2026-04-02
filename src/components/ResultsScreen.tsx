@@ -20,6 +20,20 @@ interface ResultsScreenProps {
   onRestart: () => void;
 }
 
+const barColors: Record<NeuroKey, string> = {
+  dopa: '#4a6fa5',
+  ach:  '#4a6fa5',
+  gaba: '#8a9a3a',
+  sero: '#8a9a3a',
+};
+
+const defBarColors: Record<NeuroKey, string> = {
+  dopa: '#3a8a4a',
+  ach:  '#8a9a3a',
+  gaba: '#8a9a3a',
+  sero: '#8a9a3a',
+};
+
 const neuroColors: Record<NeuroKey, { color: string; bg: string; border: string }> = {
   dopa: { color: '#6b5c8a', bg: '#f3f0f8', border: '#d6cfe8' },
   ach:  { color: '#3d7068', bg: '#eef5f4', border: '#c0d9d6' },
@@ -33,13 +47,72 @@ const levelColors = {
   high: { color: '#b45454', bg: '#fdf0f0' },
 };
 
+/* Segmented bar: renders filled blocks + empty blocks */
+const SegmentedBar = ({
+  value,
+  max,
+  color,
+  blockSize = 1,
+}: {
+  value: number;
+  max: number;
+  color: string;
+  blockSize?: number;
+}) => {
+  const totalBlocks = Math.ceil(max / blockSize);
+  const filledBlocks = Math.ceil(value / blockSize);
+
+  return (
+    <div className="flex gap-[2px] items-center flex-1">
+      {Array.from({ length: totalBlocks }, (_, i) => (
+        <div
+          key={i}
+          className="h-5 flex-1 rounded-[2px]"
+          style={{
+            background: i < filledBlocks ? color : '#e8e6e1',
+            minWidth: '3px',
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+/* Scale markers below the bar */
+const ScaleMarkers = ({ thresholds }: { thresholds: { pos: number; label: string; color?: string }[] }) => (
+  <div className="relative h-4 mt-0.5">
+    {thresholds.map((t, i) => (
+      <span
+        key={i}
+        className="absolute text-[10px] -translate-x-1/2"
+        style={{ left: `${t.pos}%`, color: t.color || '#999' }}
+      >
+        {t.label}
+      </span>
+    ))}
+  </div>
+);
+
 const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
   const { dom, def, maxD, maxF } = scores;
 
-  // Determine dominant
   const dominant = neuroOrder.slice().sort((a, b) => dom[b] - dom[a])[0];
   const rd = resultData[dominant];
   const dc = neuroColors[dominant];
+
+  // Calculate total max for Part 1 (all neuro combined max for scale)
+  const totalMaxD = Math.max(...neuroOrder.map(k => maxD[k]));
+  const totalMaxF = Math.max(...neuroOrder.map(k => maxF[k]));
+
+  // Thresholds for dominance: [0 ... 70%][70% ... 100%]
+  const domThreshold = Math.round(totalMaxD * 0.7);
+  const domThresholdPct = (domThreshold / totalMaxD) * 100;
+
+  // Thresholds for deficiency: [0...30%][30%...60%][60%...100%]
+  const defT1 = Math.round(totalMaxF * 0.3);
+  const defT2 = Math.round(totalMaxF * 0.6);
+  const defT1Pct = (defT1 / totalMaxF) * 100;
+  const defT2Pct = (defT2 / totalMaxF) * 100;
 
   return (
     <div className="max-w-[640px] mx-auto px-4 md:px-6 pt-16 pb-20">
@@ -52,6 +125,97 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
       <p className="font-serif italic text-[16px] text-brav-mid text-center mb-12">
         {rd.tagline}
       </p>
+
+      {/* Dominance Chart */}
+      <div className="bg-white border border-brav-border-light rounded-xl p-5 md:p-7 mb-3">
+        <div className="text-[13px] font-medium text-brav-text text-center mb-6">
+          Домінуючий тип
+        </div>
+        <div className="flex flex-col gap-3">
+          {neuroOrder.map(k => (
+            <div key={k} className="flex items-center gap-3">
+              <div className="w-[100px] md:w-[120px] text-[13px] text-brav-mid text-right flex-shrink-0">
+                {neuroMeta[k].label}
+              </div>
+              <SegmentedBar
+                value={dom[k]}
+                max={totalMaxD}
+                color={neuroColors[k].color}
+              />
+              <div className="w-8 text-right text-[14px] font-medium text-brav-text flex-shrink-0">
+                {dom[k]}
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* Scale */}
+        <div className="flex items-center gap-3 mt-1">
+          <div className="w-[100px] md:w-[120px] flex-shrink-0" />
+          <div className="flex-1 relative">
+            <ScaleMarkers thresholds={[
+              { pos: 0, label: `[0`, color: '#4a90d9' },
+              { pos: domThresholdPct, label: `${domThreshold}][${domThreshold + 1}`, color: '#4a90d9' },
+              { pos: 100, label: `${totalMaxD}]`, color: '#4a90d9' },
+            ]} />
+          </div>
+          <div className="w-8 flex-shrink-0" />
+        </div>
+      </div>
+
+      {/* Deficiency Chart */}
+      <div className="bg-white border border-brav-border-light rounded-xl p-5 md:p-7 mb-8">
+        <div className="text-[13px] font-medium text-brav-text text-center mb-6">
+          Дефіцит нейромедіаторів
+        </div>
+        <div className="flex flex-col gap-3">
+          {neuroOrder.map(k => {
+            const level = getDefLevel(def[k], maxF[k]);
+            const lc = levelColors[level];
+            return (
+              <div key={k} className="flex items-center gap-3">
+                <div className="w-[100px] md:w-[120px] text-[13px] text-brav-mid text-right flex-shrink-0">
+                  {neuroMeta[k].label}
+                </div>
+                <SegmentedBar
+                  value={def[k]}
+                  max={totalMaxF}
+                  color={lc.color}
+                />
+                <div className="w-8 text-right text-[14px] font-medium text-brav-text flex-shrink-0">
+                  {def[k]}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {/* Scale */}
+        <div className="flex items-center gap-3 mt-1">
+          <div className="w-[100px] md:w-[120px] flex-shrink-0" />
+          <div className="flex-1 relative">
+            <ScaleMarkers thresholds={[
+              { pos: 0, label: `[0`, color: '#5a7a4a' },
+              { pos: defT1Pct, label: `${defT1}][${defT1 + 1}`, color: '#8a6a30' },
+              { pos: defT2Pct, label: `${defT2}][${defT2 + 1}`, color: '#b45454' },
+              { pos: 100, label: `${totalMaxF}]`, color: '#b45454' },
+            ]} />
+          </div>
+          <div className="w-8 flex-shrink-0" />
+        </div>
+        {/* Legend */}
+        <div className="flex justify-center gap-4 mt-5 text-[11px]">
+          <span className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-sm" style={{ background: '#5a7a4a' }} /> Норма
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-sm" style={{ background: '#8a6a30' }} /> Помірний
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-sm" style={{ background: '#b45454' }} /> Виражений
+          </span>
+        </div>
+      </div>
+
+      <div className="w-12 h-px bg-brav-border mx-auto my-10" />
 
       {/* Dominant Card */}
       <div
@@ -74,41 +238,12 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
 
       <div className="w-12 h-px bg-brav-border mx-auto my-10" />
 
-      {/* Dominance Scores */}
+      {/* Deficiency Details */}
       <div className="text-[11px] tracking-[0.15em] uppercase text-brav-light mb-4">
-        Профіль домінування — Частина 1
-      </div>
-      <div className="flex flex-col gap-3 mb-8">
-        {neuroOrder.map(k => {
-          const pct = maxD[k] > 0 ? Math.round((dom[k] / maxD[k]) * 100) : 0;
-          return (
-            <div key={k} className="flex items-center gap-3">
-              <div className="w-[120px] text-[14px] text-brav-mid flex-shrink-0">
-                {neuroMeta[k].label}
-              </div>
-              <div className="flex-1 h-1.5 bg-brav-warm rounded-md overflow-hidden border border-brav-border-light">
-                <div
-                  className="h-full rounded-md transition-all duration-700"
-                  style={{ width: `${pct}%`, background: neuroColors[k].color }}
-                />
-              </div>
-              <div className="w-10 text-right text-[13px] text-brav-light">
-                {dom[k]}/{maxD[k]}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="w-12 h-px bg-brav-border mx-auto my-10" />
-
-      {/* Deficiency Cards */}
-      <div className="text-[11px] tracking-[0.15em] uppercase text-brav-light mb-4">
-        Оцінка дефіцитів — Частина 2
+        Деталі дефіцитів
       </div>
       <div className="flex flex-col gap-2.5">
         {neuroOrder.map(k => {
-          const pct = maxF[k] > 0 ? Math.round((def[k] / maxF[k]) * 100) : 0;
           const level = getDefLevel(def[k], maxF[k]);
           const lm = levelMeta[level];
           const lc = levelColors[level];
@@ -126,12 +261,6 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
                 >
                   {lm.text}
                 </span>
-              </div>
-              <div className="h-1 bg-brav-warm rounded overflow-hidden mb-2.5">
-                <div
-                  className="h-full rounded"
-                  style={{ width: `${pct}%`, background: neuroColors[k].color }}
-                />
               </div>
               <div className="text-[13px] text-brav-mid leading-relaxed">
                 {note}
