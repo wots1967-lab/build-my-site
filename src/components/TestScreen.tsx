@@ -225,19 +225,19 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
       </div>
 
       {/* Bottom Nav */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-sm border-t border-brav-border px-4 md:px-8 py-3 flex items-center justify-between gap-4" style={{ background: 'rgba(250,249,247,0.97)' }}>
+      <div className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-sm border-t border-brav-border px-3 sm:px-4 md:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4" style={{ background: 'rgba(250,249,247,0.97)' }}>
         {currentIdx > 0 ? (
           <button
             onClick={onPrev}
-            className="bg-transparent border border-brav-border text-brav-mid px-6 py-2.5 rounded-full font-sans text-[14px] cursor-pointer transition-all hover:border-brav-mid hover:text-brav-text"
+            className="bg-transparent border border-brav-border text-brav-mid px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-sans text-[13px] sm:text-[14px] cursor-pointer transition-all hover:border-brav-mid hover:text-brav-text flex-shrink-0"
           >
-            ← Назад
+            ←
           </button>
         ) : <div />}
 
-        <div className="flex items-center gap-4">
-          <div className="text-[13px] text-brav-light">
-            <span className="text-brav-mid font-medium">{answeredInSection}</span> з {sec.questions.length}
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+          <div className="text-[12px] sm:text-[13px] text-brav-light whitespace-nowrap">
+            <span className="text-brav-mid font-medium">{answeredInSection}</span>/{sec.questions.length}
           </div>
 
           {/* Keyboard hints */}
@@ -256,6 +256,15 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
           )}
         </div>
 
+        <button
+          onClick={onNext}
+          className={`border-none px-5 sm:px-8 py-2 sm:py-2.5 rounded-full font-sans text-[13px] sm:text-[14px] cursor-pointer transition-opacity hover:opacity-[0.78] flex-shrink-0 ${
+            allAnswered ? 'bg-brav-text text-brav-bg' : 'bg-brav-text/70 text-brav-bg'
+          }`}
+        >
+          {isLast ? 'Результати' : 'Далі →'}
+        </button>
+      </div>
         <button
           onClick={onNext}
           className={`border-none px-8 py-2.5 rounded-full font-sans text-[14px] cursor-pointer transition-opacity hover:opacity-[0.78] ${

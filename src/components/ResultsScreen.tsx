@@ -152,17 +152,17 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
         </div>
       </div>
       {/* Deficiency Chart */}
-      <div className="bg-white border border-brav-border-light rounded-xl p-5 md:p-7 mb-8">
-        <div className="text-[13px] font-medium text-brav-text text-center mb-6">
+      <div className="bg-white border border-brav-border-light rounded-xl p-3 sm:p-5 md:p-7 mb-8">
+        <div className="text-[13px] font-medium text-brav-text text-center mb-4 sm:mb-6">
           Дефіцит нейромедіаторів
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2 sm:gap-3">
           {neuroOrder.map(k => {
             const level = getDefLevel(def[k], maxF[k]);
             const lc = levelColors[level];
             return (
-              <div key={k} className="flex items-center gap-3">
-                <div className="w-[100px] md:w-[120px] text-[13px] text-brav-mid text-right flex-shrink-0">
+              <div key={k} className="flex items-center gap-2 sm:gap-3">
+                <div className="w-[70px] sm:w-[100px] md:w-[120px] text-[11px] sm:text-[13px] text-brav-mid text-right flex-shrink-0 truncate">
                   {neuroMeta[k].label}
                 </div>
                 <SegmentedBar
@@ -170,7 +170,7 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
                   max={totalMaxF}
                   color={lc.color}
                 />
-                <div className="w-8 text-right text-[14px] font-medium text-brav-text flex-shrink-0">
+                <div className="w-7 sm:w-8 text-right text-[13px] sm:text-[14px] font-medium text-brav-text flex-shrink-0">
                   {def[k]}
                 </div>
               </div>
@@ -178,32 +178,31 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
           })}
         </div>
         {/* Scale */}
-        <div className="flex items-center gap-3 mt-1">
-          <div className="w-[100px] md:w-[120px] flex-shrink-0" />
-          <div className="flex-1 relative">
+        <div className="flex items-center gap-2 sm:gap-3 mt-1">
+          <div className="w-[70px] sm:w-[100px] md:w-[120px] flex-shrink-0" />
+          <div className="flex-1 relative min-w-0">
             <ScaleMarkers thresholds={[
-              { pos: 0, label: `[0`, color: '#5a7a4a' },
-              { pos: defT1Pct, label: `${defT1}][${defT1 + 1}`, color: '#8a6a30' },
-              { pos: defT2Pct, label: `${defT2}][${defT2 + 1}`, color: '#b45454' },
-              { pos: 100, label: `${totalMaxF}]`, color: '#b45454' },
+              { pos: 0, label: `0`, color: '#5a7a4a' },
+              { pos: defT1Pct, label: `${defT1}`, color: '#8a6a30' },
+              { pos: defT2Pct, label: `${defT2}`, color: '#b45454' },
+              { pos: 100, label: `${totalMaxF}`, color: '#b45454' },
             ]} />
           </div>
-          <div className="w-8 flex-shrink-0" />
+          <div className="w-7 sm:w-8 flex-shrink-0" />
         </div>
         {/* Legend */}
-        <div className="flex justify-center gap-4 mt-5 text-[11px]">
-          <span className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-sm" style={{ background: '#5a7a4a' }} /> Норма
+        <div className="flex justify-center gap-3 sm:gap-4 mt-4 sm:mt-5 text-[10px] sm:text-[11px]">
+          <span className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm" style={{ background: '#5a7a4a' }} /> Норма
           </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-sm" style={{ background: '#8a6a30' }} /> Помірний
+          <span className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm" style={{ background: '#8a6a30' }} /> Помірний
           </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-sm" style={{ background: '#b45454' }} /> Виражений
+          <span className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm" style={{ background: '#b45454' }} /> Виражений
           </span>
         </div>
       </div>
-
       <div className="w-12 h-px bg-brav-border mx-auto my-10" />
 
       {/* Dominant Card */}
