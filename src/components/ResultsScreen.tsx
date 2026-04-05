@@ -52,47 +52,37 @@ const SegmentedBar = ({
   value,
   max,
   color,
-  blockSize = 1,
 }: {
   value: number;
   max: number;
   color: string;
-  blockSize?: number;
 }) => {
-  const totalBlocks = Math.ceil(max / blockSize);
-  const filledBlocks = Math.ceil(value / blockSize);
+  const pct = max > 0 ? (value / max) * 100 : 0;
 
   return (
-    <div className="flex gap-[2px] items-center flex-1">
-      {Array.from({ length: totalBlocks }, (_, i) => (
-        <div
-          key={i}
-          className="h-5 flex-1 rounded-[2px]"
-          style={{
-            background: i < filledBlocks ? color : '#e8e6e1',
-            minWidth: '3px',
-          }}
-        />
-      ))}
+    <div className="flex-1 h-5 bg-[#e8e6e1] rounded-[3px] overflow-hidden min-w-0">
+      <div
+        className="h-full rounded-[3px] transition-all duration-300"
+        style={{ width: `${pct}%`, background: color }}
+      />
     </div>
   );
 };
 
 /* Scale markers below the bar */
 const ScaleMarkers = ({ thresholds }: { thresholds: { pos: number; label: string; color?: string }[] }) => (
-  <div className="relative h-4 mt-0.5">
+  <div className="relative h-4 mt-0.5 overflow-hidden">
     {thresholds.map((t, i) => (
       <span
         key={i}
-        className="absolute text-[10px] -translate-x-1/2"
-        style={{ left: `${t.pos}%`, color: t.color || '#999' }}
+        className="absolute text-[9px] sm:text-[10px] -translate-x-1/2 whitespace-nowrap"
+        style={{ left: `${Math.min(Math.max(t.pos, 5), 95)}%`, color: t.color || '#999' }}
       >
         {t.label}
       </span>
     ))}
   </div>
 );
-
 const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
   const { dom, def, maxD, maxF } = scores;
 
