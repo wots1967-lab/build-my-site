@@ -154,19 +154,18 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
         </div>
       </div>
       {/* Section Content */}
-      <div className="max-w-[680px] mx-auto px-4 md:px-6 pt-8 md:pt-12 pb-28 md:pb-32">
-        <div className="mb-8">
-          <div className="text-[11px] tracking-[0.15em] uppercase mb-2" style={{ color: colors.color }}>
+      <div className="max-w-[680px] mx-auto px-3 sm:px-4 md:px-6 pt-6 sm:pt-8 md:pt-12 pb-24 sm:pb-28 md:pb-32">
+        <div className="mb-6 sm:mb-8">
+          <div className="text-[10px] sm:text-[11px] tracking-[0.15em] uppercase mb-2" style={{ color: colors.color }}>
             {meta.label} · {sec.category}
           </div>
-          <div className="font-serif text-[26px] font-normal text-brav-text mb-2">
+          <div className="font-serif text-[22px] sm:text-[26px] font-normal text-brav-text mb-2">
             {sec.category}
           </div>
-          <div className="text-[14px] text-brav-mid leading-relaxed">
+          <div className="text-[13px] sm:text-[14px] text-brav-mid leading-relaxed">
             {sec.hint}
           </div>
         </div>
-
         <div className="flex flex-col gap-0.5">
           {sec.questions.map((q, qi) => {
             const key = `${sec.id}_${qi}`;
