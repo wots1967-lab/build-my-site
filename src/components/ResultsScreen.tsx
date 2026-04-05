@@ -52,47 +52,37 @@ const SegmentedBar = ({
   value,
   max,
   color,
-  blockSize = 1,
 }: {
   value: number;
   max: number;
   color: string;
-  blockSize?: number;
 }) => {
-  const totalBlocks = Math.ceil(max / blockSize);
-  const filledBlocks = Math.ceil(value / blockSize);
+  const pct = max > 0 ? (value / max) * 100 : 0;
 
   return (
-    <div className="flex gap-[2px] items-center flex-1">
-      {Array.from({ length: totalBlocks }, (_, i) => (
-        <div
-          key={i}
-          className="h-5 flex-1 rounded-[2px]"
-          style={{
-            background: i < filledBlocks ? color : '#e8e6e1',
-            minWidth: '3px',
-          }}
-        />
-      ))}
+    <div className="flex-1 h-5 bg-[#e8e6e1] rounded-[3px] overflow-hidden min-w-0">
+      <div
+        className="h-full rounded-[3px] transition-all duration-300"
+        style={{ width: `${pct}%`, background: color }}
+      />
     </div>
   );
 };
 
 /* Scale markers below the bar */
 const ScaleMarkers = ({ thresholds }: { thresholds: { pos: number; label: string; color?: string }[] }) => (
-  <div className="relative h-4 mt-0.5">
+  <div className="relative h-4 mt-0.5 overflow-hidden">
     {thresholds.map((t, i) => (
       <span
         key={i}
-        className="absolute text-[10px] -translate-x-1/2"
-        style={{ left: `${t.pos}%`, color: t.color || '#999' }}
+        className="absolute text-[9px] sm:text-[10px] -translate-x-1/2 whitespace-nowrap"
+        style={{ left: `${Math.min(Math.max(t.pos, 5), 95)}%`, color: t.color || '#999' }}
       >
         {t.label}
       </span>
     ))}
   </div>
 );
-
 const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
   const { dom, def, maxD, maxF } = scores;
 
@@ -115,7 +105,7 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
   const defT2Pct = (defT2 / totalMaxF) * 100;
 
   return (
-    <div className="max-w-[640px] mx-auto px-4 md:px-6 pt-16 pb-20">
+    <div className="max-w-[640px] mx-auto px-3 sm:px-4 md:px-6 pt-10 sm:pt-16 pb-20">
       <p className="text-[11px] tracking-[0.18em] uppercase text-brav-light mb-3 text-center">
         Результати нейрохімічної оцінки
       </p>
@@ -127,14 +117,14 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
       </p>
 
       {/* Dominance Chart */}
-      <div className="bg-white border border-brav-border-light rounded-xl p-5 md:p-7 mb-3">
-        <div className="text-[13px] font-medium text-brav-text text-center mb-6">
+      <div className="bg-white border border-brav-border-light rounded-xl p-3 sm:p-5 md:p-7 mb-3">
+        <div className="text-[13px] font-medium text-brav-text text-center mb-4 sm:mb-6">
           Домінуючий тип
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2 sm:gap-3">
           {neuroOrder.map(k => (
-            <div key={k} className="flex items-center gap-3">
-              <div className="w-[100px] md:w-[120px] text-[13px] text-brav-mid text-right flex-shrink-0">
+            <div key={k} className="flex items-center gap-2 sm:gap-3">
+              <div className="w-[70px] sm:w-[100px] md:w-[120px] text-[11px] sm:text-[13px] text-brav-mid text-right flex-shrink-0 truncate">
                 {neuroMeta[k].label}
               </div>
               <SegmentedBar
@@ -142,38 +132,37 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
                 max={totalMaxD}
                 color={neuroColors[k].color}
               />
-              <div className="w-8 text-right text-[14px] font-medium text-brav-text flex-shrink-0">
+              <div className="w-7 sm:w-8 text-right text-[13px] sm:text-[14px] font-medium text-brav-text flex-shrink-0">
                 {dom[k]}
               </div>
             </div>
           ))}
         </div>
         {/* Scale */}
-        <div className="flex items-center gap-3 mt-1">
-          <div className="w-[100px] md:w-[120px] flex-shrink-0" />
-          <div className="flex-1 relative">
+        <div className="flex items-center gap-2 sm:gap-3 mt-1">
+          <div className="w-[70px] sm:w-[100px] md:w-[120px] flex-shrink-0" />
+          <div className="flex-1 relative min-w-0">
             <ScaleMarkers thresholds={[
-              { pos: 0, label: `[0`, color: '#4a90d9' },
-              { pos: domThresholdPct, label: `${domThreshold}][${domThreshold + 1}`, color: '#4a90d9' },
-              { pos: 100, label: `${totalMaxD}]`, color: '#4a90d9' },
+              { pos: 0, label: `0`, color: '#4a90d9' },
+              { pos: domThresholdPct, label: `${domThreshold}`, color: '#4a90d9' },
+              { pos: 100, label: `${totalMaxD}`, color: '#4a90d9' },
             ]} />
           </div>
-          <div className="w-8 flex-shrink-0" />
+          <div className="w-7 sm:w-8 flex-shrink-0" />
         </div>
       </div>
-
       {/* Deficiency Chart */}
-      <div className="bg-white border border-brav-border-light rounded-xl p-5 md:p-7 mb-8">
-        <div className="text-[13px] font-medium text-brav-text text-center mb-6">
+      <div className="bg-white border border-brav-border-light rounded-xl p-3 sm:p-5 md:p-7 mb-8">
+        <div className="text-[13px] font-medium text-brav-text text-center mb-4 sm:mb-6">
           Дефіцит нейромедіаторів
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2 sm:gap-3">
           {neuroOrder.map(k => {
             const level = getDefLevel(def[k], maxF[k]);
             const lc = levelColors[level];
             return (
-              <div key={k} className="flex items-center gap-3">
-                <div className="w-[100px] md:w-[120px] text-[13px] text-brav-mid text-right flex-shrink-0">
+              <div key={k} className="flex items-center gap-2 sm:gap-3">
+                <div className="w-[70px] sm:w-[100px] md:w-[120px] text-[11px] sm:text-[13px] text-brav-mid text-right flex-shrink-0 truncate">
                   {neuroMeta[k].label}
                 </div>
                 <SegmentedBar
@@ -181,7 +170,7 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
                   max={totalMaxF}
                   color={lc.color}
                 />
-                <div className="w-8 text-right text-[14px] font-medium text-brav-text flex-shrink-0">
+                <div className="w-7 sm:w-8 text-right text-[13px] sm:text-[14px] font-medium text-brav-text flex-shrink-0">
                   {def[k]}
                 </div>
               </div>
@@ -189,32 +178,31 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
           })}
         </div>
         {/* Scale */}
-        <div className="flex items-center gap-3 mt-1">
-          <div className="w-[100px] md:w-[120px] flex-shrink-0" />
-          <div className="flex-1 relative">
+        <div className="flex items-center gap-2 sm:gap-3 mt-1">
+          <div className="w-[70px] sm:w-[100px] md:w-[120px] flex-shrink-0" />
+          <div className="flex-1 relative min-w-0">
             <ScaleMarkers thresholds={[
-              { pos: 0, label: `[0`, color: '#5a7a4a' },
-              { pos: defT1Pct, label: `${defT1}][${defT1 + 1}`, color: '#8a6a30' },
-              { pos: defT2Pct, label: `${defT2}][${defT2 + 1}`, color: '#b45454' },
-              { pos: 100, label: `${totalMaxF}]`, color: '#b45454' },
+              { pos: 0, label: `0`, color: '#5a7a4a' },
+              { pos: defT1Pct, label: `${defT1}`, color: '#8a6a30' },
+              { pos: defT2Pct, label: `${defT2}`, color: '#b45454' },
+              { pos: 100, label: `${totalMaxF}`, color: '#b45454' },
             ]} />
           </div>
-          <div className="w-8 flex-shrink-0" />
+          <div className="w-7 sm:w-8 flex-shrink-0" />
         </div>
         {/* Legend */}
-        <div className="flex justify-center gap-4 mt-5 text-[11px]">
-          <span className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-sm" style={{ background: '#5a7a4a' }} /> Норма
+        <div className="flex justify-center gap-3 sm:gap-4 mt-4 sm:mt-5 text-[10px] sm:text-[11px]">
+          <span className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm" style={{ background: '#5a7a4a' }} /> Норма
           </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-sm" style={{ background: '#8a6a30' }} /> Помірний
+          <span className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm" style={{ background: '#8a6a30' }} /> Помірний
           </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-sm" style={{ background: '#b45454' }} /> Виражений
+          <span className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm" style={{ background: '#b45454' }} /> Виражений
           </span>
         </div>
       </div>
-
       <div className="w-12 h-px bg-brav-border mx-auto my-10" />
 
       {/* Dominant Card */}

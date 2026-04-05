@@ -128,14 +128,14 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
   return (
     <div className="min-h-screen">
       {/* Sticky Header */}
-      <div className="sticky top-0 z-50 backdrop-blur-sm border-b border-brav-border px-4 md:px-8 py-3.5 flex items-center gap-3 md:gap-6" style={{ background: 'rgba(250,249,247,0.96)' }}>
+      <div className="sticky top-0 z-50 backdrop-blur-sm border-b border-brav-border px-3 sm:px-4 md:px-8 py-2.5 sm:py-3.5 flex items-center gap-2 sm:gap-3 md:gap-6" style={{ background: 'rgba(250,249,247,0.96)' }}>
         <div className="hidden md:block font-serif text-[15px] text-brav-text flex-1 whitespace-nowrap overflow-hidden text-ellipsis">
           {sec.part === 1 ? 'Частина 1 — Домінування' : 'Частина 2 — Дефіцити'}
         </div>
 
-        <div className="flex-[2] md:max-w-[320px]">
-          <div className="flex justify-between text-[11px] text-brav-light mb-1.5">
-            <span>Блок {currentIdx + 1} з {total}</span>
+        <div className="flex-[2] min-w-0 md:max-w-[320px]">
+          <div className="flex justify-between text-[10px] sm:text-[11px] text-brav-light mb-1.5">
+            <span>Блок {currentIdx + 1}/{total}</span>
             <span>{pct}%</span>
           </div>
           <div className="h-0.5 bg-brav-border rounded-sm overflow-hidden">
@@ -147,27 +147,25 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
         </div>
 
         <div
-          className="text-[12px] px-3.5 py-1 rounded-full border whitespace-nowrap"
+          className="text-[10px] sm:text-[12px] px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-full border whitespace-nowrap flex-shrink-0"
           style={{ color: colors.color, background: colors.bg, borderColor: colors.border }}
         >
           {meta.label}
         </div>
       </div>
-
       {/* Section Content */}
-      <div className="max-w-[680px] mx-auto px-4 md:px-6 pt-8 md:pt-12 pb-28 md:pb-32">
-        <div className="mb-8">
-          <div className="text-[11px] tracking-[0.15em] uppercase mb-2" style={{ color: colors.color }}>
+      <div className="max-w-[680px] mx-auto px-3 sm:px-4 md:px-6 pt-6 sm:pt-8 md:pt-12 pb-24 sm:pb-28 md:pb-32">
+        <div className="mb-6 sm:mb-8">
+          <div className="text-[10px] sm:text-[11px] tracking-[0.15em] uppercase mb-2" style={{ color: colors.color }}>
             {meta.label} · {sec.category}
           </div>
-          <div className="font-serif text-[26px] font-normal text-brav-text mb-2">
+          <div className="font-serif text-[22px] sm:text-[26px] font-normal text-brav-text mb-2">
             {sec.category}
           </div>
-          <div className="text-[14px] text-brav-mid leading-relaxed">
+          <div className="text-[13px] sm:text-[14px] text-brav-mid leading-relaxed">
             {sec.hint}
           </div>
         </div>
-
         <div className="flex flex-col gap-0.5">
           {sec.questions.map((q, qi) => {
             const key = `${sec.id}_${qi}`;
@@ -227,19 +225,19 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
       </div>
 
       {/* Bottom Nav */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-sm border-t border-brav-border px-4 md:px-8 py-3 flex items-center justify-between gap-4" style={{ background: 'rgba(250,249,247,0.97)' }}>
+      <div className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-sm border-t border-brav-border px-3 sm:px-4 md:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4" style={{ background: 'rgba(250,249,247,0.97)' }}>
         {currentIdx > 0 ? (
           <button
             onClick={onPrev}
-            className="bg-transparent border border-brav-border text-brav-mid px-6 py-2.5 rounded-full font-sans text-[14px] cursor-pointer transition-all hover:border-brav-mid hover:text-brav-text"
+            className="bg-transparent border border-brav-border text-brav-mid px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-sans text-[13px] sm:text-[14px] cursor-pointer transition-all hover:border-brav-mid hover:text-brav-text flex-shrink-0"
           >
-            ← Назад
+            ←
           </button>
         ) : <div />}
 
-        <div className="flex items-center gap-4">
-          <div className="text-[13px] text-brav-light">
-            <span className="text-brav-mid font-medium">{answeredInSection}</span> з {sec.questions.length}
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+          <div className="text-[12px] sm:text-[13px] text-brav-light whitespace-nowrap">
+            <span className="text-brav-mid font-medium">{answeredInSection}</span>/{sec.questions.length}
           </div>
 
           {/* Keyboard hints */}
@@ -260,7 +258,7 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
 
         <button
           onClick={onNext}
-          className={`border-none px-8 py-2.5 rounded-full font-sans text-[14px] cursor-pointer transition-opacity hover:opacity-[0.78] ${
+          className={`border-none px-5 sm:px-8 py-2 sm:py-2.5 rounded-full font-sans text-[13px] sm:text-[14px] cursor-pointer transition-opacity hover:opacity-[0.78] flex-shrink-0 ${
             allAnswered ? 'bg-brav-text text-brav-bg' : 'bg-brav-text/70 text-brav-bg'
           }`}
         >
