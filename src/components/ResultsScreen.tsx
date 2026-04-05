@@ -117,14 +117,14 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
       </p>
 
       {/* Dominance Chart */}
-      <div className="bg-white border border-brav-border-light rounded-xl p-5 md:p-7 mb-3">
-        <div className="text-[13px] font-medium text-brav-text text-center mb-6">
+      <div className="bg-white border border-brav-border-light rounded-xl p-3 sm:p-5 md:p-7 mb-3">
+        <div className="text-[13px] font-medium text-brav-text text-center mb-4 sm:mb-6">
           Домінуючий тип
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2 sm:gap-3">
           {neuroOrder.map(k => (
-            <div key={k} className="flex items-center gap-3">
-              <div className="w-[100px] md:w-[120px] text-[13px] text-brav-mid text-right flex-shrink-0">
+            <div key={k} className="flex items-center gap-2 sm:gap-3">
+              <div className="w-[70px] sm:w-[100px] md:w-[120px] text-[11px] sm:text-[13px] text-brav-mid text-right flex-shrink-0 truncate">
                 {neuroMeta[k].label}
               </div>
               <SegmentedBar
@@ -132,26 +132,25 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
                 max={totalMaxD}
                 color={neuroColors[k].color}
               />
-              <div className="w-8 text-right text-[14px] font-medium text-brav-text flex-shrink-0">
+              <div className="w-7 sm:w-8 text-right text-[13px] sm:text-[14px] font-medium text-brav-text flex-shrink-0">
                 {dom[k]}
               </div>
             </div>
           ))}
         </div>
         {/* Scale */}
-        <div className="flex items-center gap-3 mt-1">
-          <div className="w-[100px] md:w-[120px] flex-shrink-0" />
-          <div className="flex-1 relative">
+        <div className="flex items-center gap-2 sm:gap-3 mt-1">
+          <div className="w-[70px] sm:w-[100px] md:w-[120px] flex-shrink-0" />
+          <div className="flex-1 relative min-w-0">
             <ScaleMarkers thresholds={[
-              { pos: 0, label: `[0`, color: '#4a90d9' },
-              { pos: domThresholdPct, label: `${domThreshold}][${domThreshold + 1}`, color: '#4a90d9' },
-              { pos: 100, label: `${totalMaxD}]`, color: '#4a90d9' },
+              { pos: 0, label: `0`, color: '#4a90d9' },
+              { pos: domThresholdPct, label: `${domThreshold}`, color: '#4a90d9' },
+              { pos: 100, label: `${totalMaxD}`, color: '#4a90d9' },
             ]} />
           </div>
-          <div className="w-8 flex-shrink-0" />
+          <div className="w-7 sm:w-8 flex-shrink-0" />
         </div>
       </div>
-
       {/* Deficiency Chart */}
       <div className="bg-white border border-brav-border-light rounded-xl p-5 md:p-7 mb-8">
         <div className="text-[13px] font-medium text-brav-text text-center mb-6">
