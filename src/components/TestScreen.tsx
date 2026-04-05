@@ -265,15 +265,6 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
           {isLast ? 'Результати' : 'Далі →'}
         </button>
       </div>
-        <button
-          onClick={onNext}
-          className={`border-none px-8 py-2.5 rounded-full font-sans text-[14px] cursor-pointer transition-opacity hover:opacity-[0.78] ${
-            allAnswered ? 'bg-brav-text text-brav-bg' : 'bg-brav-text/70 text-brav-bg'
-          }`}
-        >
-          {isLast ? 'Результати' : 'Далі →'}
-        </button>
-      </div>
     </div>
   );
 };
