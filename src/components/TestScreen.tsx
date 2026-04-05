@@ -128,14 +128,14 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
   return (
     <div className="min-h-screen">
       {/* Sticky Header */}
-      <div className="sticky top-0 z-50 backdrop-blur-sm border-b border-brav-border px-4 md:px-8 py-3.5 flex items-center gap-3 md:gap-6" style={{ background: 'rgba(250,249,247,0.96)' }}>
+      <div className="sticky top-0 z-50 backdrop-blur-sm border-b border-brav-border px-3 sm:px-4 md:px-8 py-2.5 sm:py-3.5 flex items-center gap-2 sm:gap-3 md:gap-6" style={{ background: 'rgba(250,249,247,0.96)' }}>
         <div className="hidden md:block font-serif text-[15px] text-brav-text flex-1 whitespace-nowrap overflow-hidden text-ellipsis">
           {sec.part === 1 ? 'Частина 1 — Домінування' : 'Частина 2 — Дефіцити'}
         </div>
 
-        <div className="flex-[2] md:max-w-[320px]">
-          <div className="flex justify-between text-[11px] text-brav-light mb-1.5">
-            <span>Блок {currentIdx + 1} з {total}</span>
+        <div className="flex-[2] min-w-0 md:max-w-[320px]">
+          <div className="flex justify-between text-[10px] sm:text-[11px] text-brav-light mb-1.5">
+            <span>Блок {currentIdx + 1}/{total}</span>
             <span>{pct}%</span>
           </div>
           <div className="h-0.5 bg-brav-border rounded-sm overflow-hidden">
@@ -147,13 +147,12 @@ const TestScreen = ({ sections, currentIdx, answers, onAnswer, onNext, onPrev }:
         </div>
 
         <div
-          className="text-[12px] px-3.5 py-1 rounded-full border whitespace-nowrap"
+          className="text-[10px] sm:text-[12px] px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-full border whitespace-nowrap flex-shrink-0"
           style={{ color: colors.color, background: colors.bg, borderColor: colors.border }}
         >
           {meta.label}
         </div>
       </div>
-
       {/* Section Content */}
       <div className="max-w-[680px] mx-auto px-4 md:px-6 pt-8 md:pt-12 pb-28 md:pb-32">
         <div className="mb-8">
