@@ -105,7 +105,7 @@ const ResultsScreen = ({ scores, onRestart }: ResultsScreenProps) => {
   const defT2Pct = (defT2 / totalMaxF) * 100;
 
   return (
-    <div className="max-w-[640px] mx-auto px-4 md:px-6 pt-16 pb-20">
+    <div className="max-w-[640px] mx-auto px-3 sm:px-4 md:px-6 pt-10 sm:pt-16 pb-20">
       <p className="text-[11px] tracking-[0.18em] uppercase text-brav-light mb-3 text-center">
         Результати нейрохімічної оцінки
       </p>
